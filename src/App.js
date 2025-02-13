@@ -108,31 +108,31 @@ export default function App() {
     return () => clearInterval(heartInterval);
   }, []);
 
-  return (
+ return (
     <>
-      <button className="theme-toggle" onClick={toggleTheme}>
-        THEME
-      </button>
+      <button className="theme-toggle" onClick={toggleTheme}>THEME</button>
       <div className="cyber-grid"></div>
       <div className="scanline"></div>
       <div className="hearts" ref={heartsContainerRef}></div>
 
-      <div className="container">
-        <h1 className="title">💻 Valentino roaster 🔥</h1>
-        <input
-          type="text"
-          className="input-field"
-          id="username"
-          placeholder="ENTER USERNAME"
-          ref={usernameRef}
-        />
-        <button className="btn" onClick={generateRoast}>
-          Find my valentine 💘
-        </button>
-        <div className="result" id="result">
-          {result}
+      <div className="scroll-container">
+        <div className="content-wrapper">
+          <div className="container">
+            <h1 className="title">💻 Valentino roaster 🔥</h1>
+            <input
+              type="text"
+              className="input-field"
+              id="username"
+              placeholder="ENTER USERNAME"
+              ref={usernameRef}
+            />
+            <button className="btn" onClick={generateRoast}>
+              Find my valentine 💘
+            </button>
+            <div className="result">{result}</div>
+          </div>
         </div>
       </div>
     </>
-  );
+ );
 }
