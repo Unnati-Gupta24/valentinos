@@ -9,10 +9,10 @@ _A roast generator that reveals your "romantic" compatibility with hilarious AI-
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-username/valentino-roaster.git
+https://github.com/Unnati-Gupta24/valentinos.git
 
 # Navigate to project directory
-cd valentino-roaster
+cd valentinos
 
 # Install dependencies
 npm install
