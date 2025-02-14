@@ -89,7 +89,6 @@ export default function App() {
       });
       
       if (response.status === 403) {
-        // If rate limited, assume username is valid to allow the app to work
         console.warn('Rate limited by GitHub API, proceeding without validation');
         return true;
       }
@@ -101,7 +100,6 @@ export default function App() {
       return response.status === 200;
     } catch (error) {
       console.error("Error checking GitHub username:", error);
-      // If there's a network error, proceed with the roast
       return true;
     }
   };
@@ -115,14 +113,13 @@ export default function App() {
       return;
     }
 
-    // Basic validation before making API call
     if (!/^[a-zA-Z0-9-]+$/.test(username)) {
       alert("Invalid GitHub username format!");
       return;
     }
 
     setIsLoading(true);
-    setResult(""); // Clear previous result
+    setResult(""); 
 
     try {
       const isValidGithubUser = await checkGithubUsername(username);
@@ -132,12 +129,10 @@ export default function App() {
         return;
       }
 
-      // Generate roast
       const index = getRoastIndex(username);
       const roast = `@${username}: ${roasts[index].replace(/\{username\}/g, username)}`;
       setResult(roast);
 
-      // Create sparkle effect
       const button = document.querySelector(".btn");
       if (button) {
         const rect = button.getBoundingClientRect();
