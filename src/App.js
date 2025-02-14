@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
+import "./App.css";
 
 const roasts = [
   "Yo @{username}, you're like a dating app glitch, every swipe's a malfunction / Your love life's so tragic it needs a documentary production / Got more baggage than an airport, more issues than Vogue / Your relationship status? Permanently in 'epilogue' / Even cupid took one look and said 'nah dawg I'm good' / Treating red flags like Pokemon cards in your neighborhood 🎭",
