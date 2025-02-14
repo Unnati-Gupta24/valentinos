@@ -1,5 +1,5 @@
-import React, { useState, useRef, useEffect } from "react";
-import "./App.css";
+import React, { useState, useRef, useEffect } from 'react';
+import './App.css';
 
 const roasts = [
   "Yo @{username}, you're like a dating app glitch, every swipe's a malfunction / Your love life's so tragic it needs a documentary production / Got more baggage than an airport, more issues than Vogue / Your relationship status? Permanently in 'epilogue' / Even cupid took one look and said 'nah dawg I'm good' / Treating red flags like Pokemon cards in your neighborhood 🎭",
@@ -56,14 +56,14 @@ export default function App() {
 
   const createHeart = () => {
     if (!heartsContainerRef.current) return;
-
+    
     const heart = document.createElement("div");
     heart.className = "heart";
     heart.textContent = ["💖", "💘", "💝", "💔"][Math.floor(Math.random() * 4)];
     heart.style.left = `${Math.random() * 100}vw`;
     heart.style.animationDuration = `${Math.random() * 3 + 4}s`;
     heart.style.animationDelay = `${Math.random() * 2}s`;
-
+    
     heartsContainerRef.current.appendChild(heart);
     setTimeout(() => {
       if (heart.parentNode) {
@@ -75,50 +75,74 @@ export default function App() {
   const getRoastIndex = (username) => {
     let hash = 0;
     for (let i = 0; i < username.length; i++) {
-      hash = (hash << 5) - hash + username.charCodeAt(i);
+      hash = ((hash << 5) - hash) + username.charCodeAt(i);
     }
     return Math.abs(hash) % roasts.length;
   };
 
   const checkGithubUsername = async (username) => {
     try {
-      const response = await fetch(`https://api.github.com/users/${username}`);
+      const response = await fetch(`https://api.github.com/users/${username}`, {
+        headers: {
+          'Accept': 'application/vnd.github.v3+json'
+        }
+      });
+      
+      if (response.status === 403) {
+        // If rate limited, assume username is valid to allow the app to work
+        console.warn('Rate limited by GitHub API, proceeding without validation');
+        return true;
+      }
+      
+      if (response.status === 404) {
+        return false;
+      }
+      
       return response.status === 200;
     } catch (error) {
       console.error("Error checking GitHub username:", error);
-      return false;
+      // If there's a network error, proceed with the roast
+      return true;
     }
   };
 
   const generateRoast = async () => {
     if (!usernameRef.current) return;
-
+    
     const username = usernameRef.current.value.trim();
     if (!username) {
       alert("INPUT REQUIRED");
       return;
     }
 
+    // Basic validation before making API call
+    if (!/^[a-zA-Z0-9-]+$/.test(username)) {
+      alert("Invalid GitHub username format!");
+      return;
+    }
+
     setIsLoading(true);
+    setResult(""); // Clear previous result
+
     try {
       const isValidGithubUser = await checkGithubUsername(username);
-
+      
       if (!isValidGithubUser) {
-        setIsLoading(false);
         alert("Invalid GitHub username! Please enter a valid GitHub username.");
         return;
       }
 
+      // Generate roast
+      const index = getRoastIndex(username);
+      const roast = `@${username}: ${roasts[index].replace(/\{username\}/g, username)}`;
+      setResult(roast);
+
+      // Create sparkle effect
       const button = document.querySelector(".btn");
       if (button) {
         const rect = button.getBoundingClientRect();
         createSparkles(rect.left + rect.width / 2, rect.top + rect.height / 2);
       }
-
-      const index = getRoastIndex(username);
-      setResult(
-        `@${username}: ${roasts[index].replace(/\{username\}/g, username)}`
-      );
     } catch (error) {
       console.error("Error generating roast:", error);
       alert("Something went wrong! Please try again.");
@@ -128,7 +152,7 @@ export default function App() {
   };
 
   const handleKeyPress = (event) => {
-    if (event.key === "Enter") {
+    if (event.key === 'Enter') {
       generateRoast();
     }
   };
@@ -159,12 +183,12 @@ export default function App() {
               ref={usernameRef}
               onKeyPress={handleKeyPress}
             />
-            <button
-              className={`btn ${isLoading ? "loading" : ""}`}
+            <button 
+              className={`btn ${isLoading ? 'loading' : ''}`}
               onClick={generateRoast}
               disabled={isLoading}
             >
-              {isLoading ? "Checking..." : "Find my valentine 💘"}
+              {isLoading ? 'Checking...' : 'Find my valentine 💘'}
             </button>
             <div className="result">{result}</div>
           </div>
@@ -172,4 +196,4 @@ export default function App() {
       </div>
     </div>
   );
-}
+} 
